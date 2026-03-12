@@ -35,26 +35,29 @@
             font-size: 40px;
             color: #1793d1;
             position: absolute;
-            animation: squash 0.5s ease-in-out 1s forwards;
+            filter: drop-shadow(0 0 10px rgba(23, 147, 209, 0.5));
+            animation: fluidSquash 0.8s cubic-bezier(0.76, 0, 0.24, 1) 1.2s forwards;
         }
 
-        @keyframes squash {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.5, 0.1); opacity: 1; }
-            100% { transform: scale(2, 0); opacity: 0; }
+        @keyframes fluidSquash {
+            0% { transform: scale(1); opacity: 1; letter-spacing: 0; }
+            40% { transform: scale(1.4, 0.8); opacity: 1; }
+            100% { transform: scale(4, 0); opacity: 0; filter: blur(2px); }
         }
 
         #line {
             position: absolute;
-            height: 2px;
+            height: 1px;
             background-color: #1793d1;
             width: 0;
             opacity: 0;
-            animation: growLine 0.5s ease-in-out 1.5s forwards;
+            box-shadow: 0 0 15px #1793d1;
+            animation: fluidLine 0.7s cubic-bezier(0.22, 1, 0.36, 1) 1.8s forwards;
         }
 
-        @keyframes growLine {
-            0% { width: 0; opacity: 1; }
+        @keyframes fluidLine {
+            0% { width: 0; opacity: 0; }
+            20% { opacity: 1; }
             100% { width: 800px; opacity: 1; }
         }
 
@@ -62,33 +65,39 @@
             background-color: #0c0c0c;
             width: 800px;
             height: 0;
-            border: 1px solid #222;
-            border-radius: 4px;
+            border-left: 1px solid #1793d1;
+            border-right: 1px solid #1793d1;
             padding: 0;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             opacity: 0;
-            animation: growTerminal 0.5s ease-out 2s forwards;
+            animation: fluidTerminal 0.9s cubic-bezier(0.16, 1, 0.3, 1) 2.3s forwards;
         }
 
-        @keyframes growTerminal {
-            0% { height: 0; opacity: 1; padding: 0; }
-            100% { height: 480px; opacity: 1; padding: 20px; }
+        @keyframes fluidTerminal {
+            0% { height: 0; opacity: 1; border-top: 1px solid #1793d1; border-bottom: 1px solid #1793d1; }
+            100% { height: 480px; opacity: 1; padding: 25px; border-top: 1px solid #222; border-bottom: 1px solid #222; border-left: 1px solid #222; border-right: 1px solid #222; }
         }
 
         #history {
             flex: 1;
             overflow-y: auto;
             font-size: 14px;
-            line-height: 1.5;
-            display: none;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeInContent 0.5s ease-out 3s forwards;
+        }
+
+        @keyframes fadeInContent {
+            to { opacity: 1; }
         }
 
         .input-line {
             display: none;
             align-items: center;
             gap: 10px;
+            margin-top: 10px;
         }
 
         .prompt {
@@ -112,7 +121,8 @@
             height: 100vh;
             background: #000;
             color: #fff;
-            padding: 50px;
+            padding: 60px;
+            animation: fadeInContent 1s ease forwards;
         }
 
         .visible {
@@ -126,8 +136,13 @@
         .ascii {
             color: #1793d1;
             white-space: pre;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            font-size: 12px;
+            line-height: 1.2;
         }
+
+        #history::-webkit-scrollbar { width: 4px; }
+        #history::-webkit-scrollbar-thumb { background: #222; }
     </style>
 </head>
 <body>
@@ -149,7 +164,8 @@
            /__/         \__\
                 </div>
                 <div>Arch Linux 6.12.1-arch1-1 (tty1)</div>
-                <div>Type 'sudo activate Iris' to unlock the system.</div>
+                <div style="opacity: 0.7;">System state: <span style="color: #ffaa00;">LOCKED</span></div>
+                <div style="margin-top: 10px;">Type <span style="color: #fff;">sudo activate Iris</span> to proceed.</div>
                 <br>
             </div>
             <div class="input-line" id="input-container">
@@ -160,9 +176,10 @@
     </div>
 
     <div id="main-page">
-        <h1 style="border-bottom: 1px solid #333; padding-bottom: 10px;">Welcome to Main System</h1>
-        <p>Доступ разрешен. Консоль деактивирована.</p>
-        <button onclick="location.reload()" style="margin-top: 20px; background: #333; color: #fff; border: 1px solid #444; padding: 10px 20px; cursor: pointer;">Logout</button>
+        <h1 style="border-bottom: 1px solid #1793d1; padding-bottom: 15px; display: inline-block;">System Shell</h1>
+        <p style="margin-top: 20px; font-size: 18px;">Доступ успешно активирован.</p>
+        <p style="color: #888;">Вы находитесь в основной директории проекта.</p>
+        <button onclick="location.reload()" style="margin-top: 40px; background: transparent; color: #1793d1; border: 1px solid #1793d1; padding: 10px 25px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.background='#1793d1'; this.style.color='#000'" onmouseout="this.style.background='transparent'; this.style.color='#1793d1'">Выйти из системы</button>
     </div>
 
     <script>
@@ -174,10 +191,9 @@
         const initContainer = document.getElementById('init-container');
 
         setTimeout(() => {
-            history.classList.add('visible');
             inputContainer.classList.add('flex-visible');
             cmdInput.focus();
-        }, 2500);
+        }, 3200);
 
         cmdInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
@@ -189,16 +205,21 @@
                 if (val.toLowerCase() === 'sudo activate iris') {
                     const status = document.createElement('div');
                     status.style.color = '#55ff55';
-                    status.innerText = 'System unlocked. Transitioning...';
+                    status.style.marginTop = '10px';
+                    status.innerText = 'Decrypting... [OK]';
                     history.appendChild(status);
                     
                     setTimeout(() => {
-                        initContainer.style.display = 'none';
-                        mainPage.classList.add('visible');
-                    }, 800);
+                        initContainer.style.transition = 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+                        initContainer.style.opacity = '0';
+                        setTimeout(() => {
+                            initContainer.style.display = 'none';
+                            mainPage.classList.add('visible');
+                        }, 800);
+                    }, 600);
                 } else if (val.toLowerCase() === 'clear') {
                     history.innerHTML = '';
-                } else {
+                } else if (val !== '') {
                     const error = document.createElement('div');
                     error.style.color = '#ff5555';
                     error.innerText = `sh: command not found: ${val}`;
