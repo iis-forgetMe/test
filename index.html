@@ -79,6 +79,25 @@
             100% { height: 480px; opacity: 1; padding: 25px; border-top: 1px solid #222; border-bottom: 1px solid #222; border-left: 1px solid #222; border-right: 1px solid #222; }
         }
 
+        /* Анимация закрытия терминала */
+        .terminal-exit {
+            animation: exitTerminal 0.5s cubic-bezier(0.7, 0, 0.84, 0) forwards !important;
+        }
+
+        @keyframes exitTerminal {
+            0% { height: 480px; padding: 25px; opacity: 1; border-color: #222; }
+            100% { height: 1px; padding: 0; opacity: 1; border-color: #1793d1; }
+        }
+
+        .line-fullscreen {
+            animation: expandFullWidth 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+        }
+
+        @keyframes expandFullWidth {
+            0% { width: 800px; }
+            100% { width: 100vw; }
+        }
+
         #history {
             flex: 1;
             overflow-y: auto;
@@ -115,21 +134,27 @@
         }
 
         #main-page {
-            display: none;
-            width: 100%;
-            height: 100vh;
+            position: fixed;
+            top: 50%;
+            left: 0;
+            width: 100vw;
+            height: 0;
             background: #000;
             color: #fff;
-            padding: 60px;
-            animation: fadeInContent 1s ease forwards;
+            overflow: hidden;
+            display: none;
+            z-index: 20;
+            transform: translateY(-50%);
         }
 
-        .visible {
+        .page-open {
             display: block !important;
+            animation: revealPage 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
-        .flex-visible {
-            display: flex !important;
+        @keyframes revealPage {
+            0% { height: 0; }
+            100% { height: 100vh; }
         }
 
         .ascii {
@@ -139,9 +164,6 @@
             font-size: 12px;
             line-height: 1.2;
         }
-
-        #history::-webkit-scrollbar { width: 4px; }
-        #history::-webkit-scrollbar-thumb { background: #222; }
     </style>
 </head>
 <body>
@@ -175,10 +197,12 @@
     </div>
 
     <div id="main-page">
-        <h1 style="border-bottom: 1px solid #1793d1; padding-bottom: 15px; display: inline-block;">System Shell</h1>
-        <p style="margin-top: 20px; font-size: 18px;">Доступ успешно активирован.</p>
-        <p style="color: #888;">Вы вошли в защищенную среду.</p>
-        <button onclick="location.reload()" style="margin-top: 40px; background: transparent; color: #1793d1; border: 1px solid #1793d1; padding: 10px 25px; cursor: pointer; transition: 0.3s;" onmouseover="this.style.background='#1793d1'; this.style.color='#000'" onmouseout="this.style.background='transparent'; this.style.color='#1793d1'">Выйти</button>
+        <div style="padding: 60px;">
+            <h1 style="border-bottom: 1px solid #1793d1; padding-bottom: 15px; display: inline-block;">System Shell</h1>
+            <p style="margin-top: 20px; font-size: 18px;">Доступ успешно активирован.</p>
+            <p style="color: #888;">Вы находитесь в основной директории проекта.</p>
+            <button onclick="location.reload()" style="margin-top: 40px; background: transparent; color: #1793d1; border: 1px solid #1793d1; padding: 10px 25px; cursor: pointer; transition: 0.3s;">Выйти</button>
+        </div>
     </div>
 
     <script>
@@ -186,6 +210,7 @@
         const history = document.getElementById('history');
         const inputContainer = document.getElementById('input-container');
         const terminal = document.getElementById('terminal');
+        const line = document.getElementById('line');
         const mainPage = document.getElementById('main-page');
         const initContainer = document.getElementById('init-container');
 
@@ -197,31 +222,40 @@
         cmdInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 const val = cmdInput.value.trim();
-                const line = document.createElement('div');
-                line.innerHTML = `<span class="prompt">[user@arch ~]$</span> ${val}`;
-                history.appendChild(line);
+                const logLine = document.createElement('div');
+                logLine.innerHTML = `<span class="prompt">[user@arch ~]$</span> ${val}`;
+                history.appendChild(logLine);
 
-                if (val.toLowerCase() === 'sudo activate iris') {
+                // Строгая проверка регистра
+                if (val === 'sudo activate Iris') {
                     const status = document.createElement('div');
                     status.style.color = '#55ff55';
-                    status.style.marginTop = '10px';
-                    status.innerText = 'Authorization successful...';
+                    status.innerText = 'Access granted. Initializing...';
                     history.appendChild(status);
                     
                     setTimeout(() => {
-                        initContainer.style.transition = 'opacity 0.6s ease';
-                        initContainer.style.opacity = '0';
+                        // 1. Схлопываем терминал обратно в линию
+                        terminal.classList.add('terminal-exit');
+                        
                         setTimeout(() => {
-                            initContainer.style.display = 'none';
-                            mainPage.classList.add('visible');
-                        }, 600);
-                    }, 500);
+                            // 2. Растягиваем линию на весь экран
+                            line.classList.add('line-fullscreen');
+                            
+                            setTimeout(() => {
+                                // 3. Раскрываем основную страницу по вертикали
+                                mainPage.classList.add('page-open');
+                                initContainer.style.display = 'none';
+                            }, 500);
+                        }, 500);
+                    }, 600);
                 } else if (val.toLowerCase() === 'clear') {
                     history.innerHTML = '';
                 } else if (val !== '') {
                     const error = document.createElement('div');
                     error.style.color = '#ff5555';
-                    error.innerText = `sh: command not found: ${val}`;
+                    error.innerText = val.toLowerCase() === 'sudo activate iris' 
+                        ? 'Error: Case sensitive. Check the capital letters.' 
+                        : `sh: command not found: ${val}`;
                     history.appendChild(error);
                 }
 
@@ -231,7 +265,7 @@
         });
 
         document.addEventListener('click', () => {
-            if (!mainPage.classList.contains('visible')) {
+            if (!mainPage.classList.contains('page-open')) {
                 cmdInput.focus();
             }
         });
