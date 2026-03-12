@@ -304,6 +304,9 @@
                         </ul>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         function toggleFav(header) {
@@ -359,6 +362,12 @@
                     cmdInput.disabled = true;
 
                     setTimeout(() => {
+                        // --- ВАЖНЫЙ ФИКС АНИМАЦИИ ---
+                        // Фиксируем текущую высоту терминала прямо перед закрытием,
+                        // чтобы браузер мог плавно анимировать к 1px.
+                        terminal.style.height = terminal.offsetHeight + 'px';
+                        // -----------------------------
+                        
                         history.style.opacity = '0';
                         inputContainer.style.opacity = '0';
                         
