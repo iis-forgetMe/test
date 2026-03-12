@@ -36,8 +36,8 @@
             color: #1793d1;
             position: absolute;
             filter: drop-shadow(0 0 10px rgba(23, 147, 209, 0.5));
-            animation: instantSquash 0.4s cubic-bezier(0.4, 0, 1, 1) 1.5s forwards;
-            z-index: 40;
+            animation: instantSquash 0.4s cubic-bezier(0.4, 0, 1, 1) 1s forwards;
+            z-index: 50;
         }
 
         @keyframes instantSquash {
@@ -45,59 +45,39 @@
             100% { transform: scale(3, 0); opacity: 0; }
         }
 
-        #line {
-            position: absolute;
-            height: 1px;
-            background-color: #1793d1;
-            width: 0;
-            opacity: 0;
-            box-shadow: 0 0 15px #1793d1;
-            animation: fluidLine 0.6s cubic-bezier(0.22, 1, 0.36, 1) 1.8s forwards;
-            z-index: 35;
-        }
-
-        @keyframes fluidLine {
-            0% { width: 0; opacity: 0; }
-            20% { opacity: 1; }
-            100% { width: 800px; opacity: 1; }
-        }
-
         #terminal {
             background-color: #0c0c0c;
             width: 800px;
             height: 0;
-            border-left: 1px solid #1793d1;
-            border-right: 1px solid #1793d1;
+            border: 1px solid #1793d1;
             padding: 0;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             opacity: 0;
-            animation: fluidTerminal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 2.2s forwards;
+            animation: fluidTerminal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards;
             z-index: 40;
+            transition: width 0.6s cubic-bezier(0.65, 0, 0.35, 1), 
+                        height 0.6s cubic-bezier(0.65, 0, 0.35, 1),
+                        border-color 0.3s ease;
         }
 
         @keyframes fluidTerminal {
-            0% { height: 0; opacity: 1; border-top: 1px solid #1793d1; border-bottom: 1px solid #1793d1; }
-            100% { height: 480px; opacity: 1; padding: 25px; border-top: 1px solid #222; border-bottom: 1px solid #222; border-left: 1px solid #222; border-right: 1px solid #222; }
+            0% { height: 0; opacity: 1; }
+            100% { height: 480px; opacity: 1; padding: 25px; border-color: #222; }
         }
 
-        .terminal-exit {
-            animation: exitToLine 0.6s cubic-bezier(0.65, 0, 0.35, 1) forwards !important;
+        /* Класс для превращения в тонкую линию */
+        .collapse-to-line {
+            height: 1px !important;
+            padding: 0 !important;
+            border-color: #1793d1 !important;
+            box-shadow: 0 0 15px #1793d1;
         }
 
-        @keyframes exitToLine {
-            0% { height: 480px; padding: 25px; opacity: 1; border-color: #222; }
-            100% { height: 1px; padding: 0; opacity: 1; border-color: #1793d1; }
-        }
-
-        .line-to-fullscreen {
-            animation: lineFullWidth 0.7s cubic-bezier(0.65, 0, 0.35, 1) forwards !important;
-        }
-
-        @keyframes lineFullWidth {
-            0% { width: 800px; opacity: 1; }
-            100% { width: 100vw; opacity: 1; }
+        /* Класс для расширения линии на весь экран */
+        .expand-to-full {
+            width: 100vw !important;
         }
 
         #history {
@@ -106,7 +86,7 @@
             font-size: 14px;
             line-height: 1.6;
             opacity: 0;
-            animation: fadeInContent 0.5s ease-out 2.8s forwards;
+            animation: fadeInContent 0.5s ease-out 2.2s forwards;
         }
 
         @keyframes fadeInContent {
@@ -175,7 +155,6 @@
 
     <div id="init-container">
         <div id="cat-face">:3</div>
-        <div id="line"></div>
         <div id="terminal">
             <div id="history">
                 <div class="ascii">
@@ -220,14 +199,13 @@
         const history = document.getElementById('history');
         const inputContainer = document.getElementById('input-container');
         const terminal = document.getElementById('terminal');
-        const line = document.getElementById('line');
         const mainPage = document.getElementById('main-page');
         const initContainer = document.getElementById('init-container');
 
         setTimeout(() => {
             inputContainer.style.display = 'flex';
             cmdInput.focus();
-        }, 3000);
+        }, 2500);
 
         cmdInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
@@ -245,20 +223,22 @@
                     cmdInput.disabled = true;
 
                     setTimeout(() => {
-                        terminal.classList.add('terminal-exit');
+                        // 1. Сплющиваем терминал в линию
+                        terminal.classList.add('collapse-to-line');
                         
                         setTimeout(() => {
-                            line.style.opacity = '1'; 
-                            line.classList.add('line-to-fullscreen');
+                            // 2. Растягиваем его же в стороны
+                            terminal.classList.add('expand-to-full');
                             
                             setTimeout(() => {
+                                // 3. Открываем шторки
                                 mainPage.style.display = 'block';
                                 setTimeout(() => {
                                     mainPage.classList.add('reveal-active');
                                     initContainer.style.display = 'none';
                                 }, 50);
-                            }, 550); 
-                        }, 450); 
+                            }, 600);
+                        }, 600);
                     }, 400);
                 } else if (val.toLowerCase() === 'clear') {
                     history.innerHTML = '';
