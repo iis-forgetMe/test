@@ -48,39 +48,41 @@
         #terminal {
             background-color: #0c0c0c;
             width: 800px;
-            height: 0;
+            height: 480px; /* Фиксируем начальную высоту */
+            max-height: 480px;
             border: 1px solid #1793d1;
-            padding: 0;
+            padding: 25px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             opacity: 0;
             animation: fluidTerminal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards;
             z-index: 40;
-            /* Плавность для всех изменений через JS */
+            /* Настройка супер-плавного перехода */
             transition: 
-                height 0.6s cubic-bezier(0.65, 0, 0.35, 1), 
-                width 0.6s cubic-bezier(0.65, 0, 0.35, 1), 
-                padding 0.6s cubic-bezier(0.65, 0, 0.35, 1),
+                max-height 0.7s cubic-bezier(0.7, 0, 0.3, 1), 
+                width 0.7s cubic-bezier(0.7, 0, 0.3, 1), 
+                padding 0.5s ease,
+                opacity 0.3s ease,
                 border-color 0.4s ease;
         }
 
         @keyframes fluidTerminal {
-            0% { height: 0; opacity: 1; }
-            100% { height: 480px; opacity: 1; padding: 25px; border-color: #222; }
+            0% { height: 0; opacity: 1; border-color: #1793d1; }
+            100% { height: 480px; opacity: 1; border-color: #222; }
         }
 
-        /* Состояние "Линия" */
-        .is-line {
-            height: 1px !important;
+        /* Состояние: Схлопывание в тонкую линию */
+        .is-collapsing {
+            max-height: 1px !important;
             padding-top: 0 !important;
             padding-bottom: 0 !important;
             border-color: #1793d1 !important;
             box-shadow: 0 0 20px #1793d1;
         }
 
-        /* Состояние "На весь экран" */
-        .is-full {
+        /* Состояние: Растягивание линии на весь экран */
+        .is-expanding-wide {
             width: 100vw !important;
         }
 
@@ -91,6 +93,7 @@
             line-height: 1.6;
             opacity: 0;
             animation: fadeInContent 0.5s ease-out 2.2s forwards;
+            transition: opacity 0.3s ease; /* Для плавного исчезновения текста */
         }
 
         @keyframes fadeInContent {
@@ -102,6 +105,7 @@
             align-items: center;
             gap: 10px;
             margin-top: 10px;
+            transition: opacity 0.3s ease;
         }
 
         .prompt {
@@ -134,10 +138,10 @@
             position: absolute;
             left: 0;
             width: 100%;
-            height: 50%;
+            height: 50.5%; /* Небольшой нахлест, чтобы не было щели */
             background: #000;
             z-index: 25;
-            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
+            transition: transform 0.9s cubic-bezier(0.7, 0, 0.3, 1);
         }
 
         #curtain-top { top: 0; border-bottom: 1px solid #1793d1; }
@@ -226,27 +230,31 @@
                     
                     cmdInput.disabled = true;
 
-                    // ЦЕПОЧКА ПЛАВНОЙ АНИМАЦИИ
                     setTimeout(() => {
-                        // 1. Сплющиваем сам терминал в линию
-                        terminal.classList.add('is-line');
+                        // 1. Сначала плавно гасим текст внутри, чтобы он не мешал сжатию
+                        history.style.opacity = '0';
+                        inputContainer.style.opacity = '0';
                         
                         setTimeout(() => {
-                            // 2. Растягиваем эту же линию в стороны
-                            terminal.classList.add('is-full');
+                            // 2. Сжимаем высоту (терминал превращается в линию)
+                            terminal.classList.add('is-collapsing');
                             
                             setTimeout(() => {
-                                // 3. Открываем шторки страницы
-                                mainPage.style.display = 'block';
+                                // 3. Растягиваем линию вширь
+                                terminal.classList.add('is-expanding-wide');
+                                
                                 setTimeout(() => {
-                                    mainPage.classList.add('reveal-active');
-                                    // Убираем терминал-линию только когда шторки начали разъезжаться
+                                    // 4. Открываем шторки
+                                    mainPage.style.display = 'block';
                                     setTimeout(() => {
-                                        initContainer.style.display = 'none';
-                                    }, 100);
-                                }, 50);
-                            }, 650); // Ждем конца расширения ширины
-                        }, 600); // Ждем конца схлопывания высоты
+                                        mainPage.classList.add('reveal-active');
+                                        setTimeout(() => {
+                                            initContainer.style.display = 'none';
+                                        }, 400);
+                                    }, 50);
+                                }, 750); 
+                            }, 700); 
+                        }, 200);
                     }, 400);
                 } else if (val.toLowerCase() === 'clear') {
                     history.innerHTML = '';
