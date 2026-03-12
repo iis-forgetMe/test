@@ -80,19 +80,19 @@
         }
 
         .terminal-exit {
-            animation: exitTerminal 0.5s cubic-bezier(0.7, 0, 0.84, 0) forwards !important;
+            animation: exitToLine 0.5s cubic-bezier(0.7, 0, 0.84, 0) forwards !important;
         }
 
-        @keyframes exitTerminal {
+        @keyframes exitToLine {
             0% { height: 480px; padding: 25px; opacity: 1; border-color: #222; }
             100% { height: 1px; padding: 0; opacity: 1; border-color: #1793d1; }
         }
 
-        .line-fullscreen {
-            animation: expandFullWidth 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+        .line-to-fullscreen {
+            animation: lineFullWidth 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
         }
 
-        @keyframes expandFullWidth {
+        @keyframes lineFullWidth {
             0% { width: 800px; }
             100% { width: 100vw; }
         }
@@ -134,27 +134,30 @@
 
         #main-page {
             position: fixed;
-            top: 50%;
+            top: 0;
             left: 0;
             width: 100vw;
-            height: 0;
+            height: 100vh;
             background: #000;
-            color: #fff;
-            overflow: hidden;
-            display: none; 
+            display: none;
             z-index: 20;
-            transform: translateY(-50%);
         }
 
-        .page-open {
-            display: block !important;
-            animation: revealPage 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        .curtain {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: #000;
+            z-index: 25;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        @keyframes revealPage {
-            0% { height: 0; }
-            100% { height: 100vh; }
-        }
+        #curtain-top { top: 0; border-bottom: 1px solid #1793d1; }
+        #curtain-bottom { bottom: 0; border-top: 1px solid #1793d1; }
+
+        .reveal-active #curtain-top { transform: translateY(-100%); }
+        .reveal-active #curtain-bottom { transform: translateY(100%); }
 
         .ascii {
             color: #1793d1;
@@ -196,7 +199,10 @@
     </div>
 
     <div id="main-page">
-        <div style="padding: 60px;">
+        <div id="curtain-top" class="curtain"></div>
+        <div id="curtain-bottom" class="curtain"></div>
+        
+        <div style="padding: 60px; color: #fff;">
             <h1 style="border-bottom: 1px solid #1793d1; padding-bottom: 15px; display: inline-block;">System Shell</h1>
             <p style="margin-top: 20px; font-size: 18px;">Доступ успешно активирован.</p>
             <p style="color: #888;">Вы находитесь в основной директории проекта.</p>
@@ -228,19 +234,29 @@
                 if (val === 'sudo activate Iris') {
                     const status = document.createElement('div');
                     status.style.color = '#55ff55';
-                    status.innerText = 'Access granted. Initializing...';
+                    status.innerText = 'Authorization successful...';
                     history.appendChild(status);
                     
                     cmdInput.disabled = true;
 
                     setTimeout(() => {
+                        // 1. Сплющиваем терминал до линии
                         terminal.classList.add('terminal-exit');
+                        
                         setTimeout(() => {
-                            line.classList.add('line-fullscreen');
+                            // 2. Растягиваем линию до краев экрана
+                            line.style.zIndex = "30";
+                            line.classList.add('line-to-fullscreen');
+                            
                             setTimeout(() => {
-                                mainPage.classList.add('page-open');
-                                initContainer.style.display = 'none';
-                            }, 500);
+                                // 3. Открываем основную страницу раздвиганием шторок
+                                mainPage.style.display = 'block';
+                                setTimeout(() => {
+                                    mainPage.classList.add('reveal-active');
+                                    initContainer.style.display = 'none';
+                                    line.style.display = 'none';
+                                }, 50);
+                            }, 600);
                         }, 500);
                     }, 600);
                 } else if (val.toLowerCase() === 'clear') {
@@ -260,7 +276,7 @@
         });
 
         document.addEventListener('click', () => {
-            if (!mainPage.classList.contains('page-open')) {
+            if (mainPage.style.display !== 'block') {
                 cmdInput.focus();
             }
         });
