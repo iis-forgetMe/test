@@ -37,6 +37,7 @@
             position: absolute;
             filter: drop-shadow(0 0 10px rgba(23, 147, 209, 0.5));
             animation: instantSquash 0.4s cubic-bezier(0.4, 0, 1, 1) 1.5s forwards;
+            z-index: 40;
         }
 
         @keyframes instantSquash {
@@ -52,7 +53,7 @@
             opacity: 0;
             box-shadow: 0 0 15px #1793d1;
             animation: fluidLine 0.6s cubic-bezier(0.22, 1, 0.36, 1) 1.8s forwards;
-            z-index: 30;
+            z-index: 35;
         }
 
         @keyframes fluidLine {
@@ -73,6 +74,7 @@
             overflow: hidden;
             opacity: 0;
             animation: fluidTerminal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 2.2s forwards;
+            z-index: 40;
         }
 
         @keyframes fluidTerminal {
@@ -187,7 +189,7 @@
             /  /       \  \
            /__/         \__\
                 </div>
-                <div>Arch Linux 6.12.1-arch1-1 (tty1) tty1</div>
+                <div>Arch Linux 6.12.1-arch1-1 (tty1)</div>
                 <div style="opacity: 0.7;">System state: <span style="color: #ffaa00;">LOCKED</span></div>
                 <div style="margin-top: 10px;">Type <span style="color: #fff;">"sudo activate Iris"</span> to proceed.</div>
                 <br>
@@ -203,11 +205,13 @@
         <div id="curtain-top" class="curtain"></div>
         <div id="curtain-bottom" class="curtain"></div>
         
-        <div style="padding: 60px; color: #fff;">
-            <h1 style="border-bottom: 1px solid #1793d1; padding-bottom: 15px; display: inline-block;">System Shell</h1>
-            <p style="margin-top: 20px; font-size: 18px;">Доступ успешно активирован.</p>
-            <p style="color: #888;">Вы вошли в защищенную среду Iris.</p>
-            <button onclick="location.reload()" style="margin-top: 40px; background: transparent; color: #1793d1; border: 1px solid #1793d1; padding: 10px 25px; cursor: pointer; transition: 0.3s;">Выйти</button>
+        <div style="padding: 50px; color: #eee;">
+            <h1 style="border-bottom: 1px solid #333; padding-bottom: 10px;">~/projects/index.html</h1>
+            <p>Добро пожаловать в основную часть сайта.</p>
+            <p>Теперь терминал закрыт, и ты находишься в режиме просмотра контента.</p>
+            <div style="margin-top: 50px; color: #666;">
+                Нажми F5, чтобы перезагрузить систему.
+            </div>
         </div>
     </div>
 
@@ -244,6 +248,7 @@
                         terminal.classList.add('terminal-exit');
                         
                         setTimeout(() => {
+                            line.style.opacity = '1'; 
                             line.classList.add('line-to-fullscreen');
                             
                             setTimeout(() => {
@@ -251,7 +256,6 @@
                                 setTimeout(() => {
                                     mainPage.classList.add('reveal-active');
                                     initContainer.style.display = 'none';
-                                    line.style.display = 'none';
                                 }, 50);
                             }, 550); 
                         }, 450); 
