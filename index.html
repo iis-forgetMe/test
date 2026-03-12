@@ -48,17 +48,20 @@
         #terminal {
             background-color: #0c0c0c;
             width: 800px;
-            height: 480px;
-            max-height: 480px;
+            /* Устанавливаем в 0, чтобы не было багов до старта анимации */
+            height: 0;
+            padding: 0;
             border: 1px solid #1793d1;
-            padding: 25px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             opacity: 0;
+            /* Анимация появления */
             animation: fluidTerminal 0.8s cubic-bezier(0.16, 1, 0.3, 1) 1.5s forwards;
             z-index: 40;
+            /* Переходы для будущего схлопывания */
             transition: 
+                height 0.7s cubic-bezier(0.7, 0, 0.3, 1),
                 max-height 0.7s cubic-bezier(0.7, 0, 0.3, 1), 
                 width 0.7s cubic-bezier(0.7, 0, 0.3, 1), 
                 padding 0.5s ease,
@@ -67,11 +70,13 @@
         }
 
         @keyframes fluidTerminal {
-            0% { height: 0; opacity: 1; border-color: #1793d1; }
-            100% { height: 480px; opacity: 1; border-color: #222; }
+            0% { height: 0; padding: 0; opacity: 1; border-color: #1793d1; }
+            100% { height: 480px; padding: 25px; opacity: 1; border-color: #222; }
         }
 
+        /* Состояние: Схлопывание в тонкую линию */
         .is-collapsing {
+            height: 1px !important;
             max-height: 1px !important;
             padding-top: 0 !important;
             padding-bottom: 0 !important;
@@ -171,7 +176,6 @@
         .bio-greeting { font-size: 20px; margin: 10px 0 5px 0; }
         .bio-subtitle { color: #888; margin-bottom: 30px; font-style: italic; }
 
-        /* ТАБЛИЦА ПРЕДПОЧТЕНИЙ */
         .favorites-list {
             text-align: left;
             border: 1px solid #222;
@@ -180,10 +184,7 @@
             overflow: hidden;
         }
 
-        .fav-item {
-            border-bottom: 1px solid #222;
-        }
-
+        .fav-item { border-bottom: 1px solid #222; }
         .fav-item:last-child { border-bottom: none; }
 
         .fav-header {
@@ -261,15 +262,18 @@
         <div class="bio-container">
             <h1 class="bio-path">/Iris/bio</h1>
             <p class="bio-greeting">Hi there! I'm Iris!</p>
-            <p class="bio-subtitle">Silly</p>
+            <p class="bio-subtitle">Here's something that I like :3</p>
 
             <div class="favorites-list">
                 <div class="fav-item">
                     <div class="fav-header" onclick="toggleFav(this)">[ Games ] <span>+</span></div>
                     <div class="fav-content">
                         <ul>
-                            <li>Ultrakill</li> <li>Genshin Impact</li>
+                            <li>Ultrakill</li>
+                            <li>Roblox</li>
                             <li>Minecraft</li>
+                            <li>OMORI</li>
+                            <li>Undertale // Deltarune</li>
                         </ul>
                     </div>
                 </div>
@@ -278,37 +282,30 @@
                     <div class="fav-header" onclick="toggleFav(this)">[ Anime ] <span>+</span></div>
                     <div class="fav-content">
                         <ul>
-                            <li>Cyberpunk: Edgerunners</li> <li>Serial Experiments Lain</li>
-                            <li>Nichijou</li>
+                            <li>Re:zero</li>
+                            <li>Alya Sometimes Hides Her Feelings in Russian</li>
+                            <li>Jujutsu Kaisen</li>
+                            <li>Jojo's Bizzare Adventure</li>
+                            <li>Chainsaw Man</li>
                         </ul>
                     </div>
                 </div>
 
                 <div class="fav-item">
-                    <div class="fav-header" onclick="toggleFav(this)">[ Software ] <span>+</span></div>
+                    <div class="fav-header" onclick="toggleFav(this)">[ Friends ] <span>+</span></div>
                     <div class="fav-content">
                         <ul>
-                            <li>Arch Linux</li> <li>Neovim</li>
-                            <li>Hyprland</li>
+                            <li>Nezorner (Best of the best)</li>
+                            <li>Mr Kinako (The one, who showed me how to love)</li>
+                            <li>Mr Fantom</li>
+                            <li>Kamori</li>
+                            <li>Sunshine</li>
+                            <li>dev0xz03</li>
                         </ul>
                     </div>
                 </div>
-
-                <div class="fav-item">
-                    <div class="fav-header" onclick="toggleFav(this)">[ Music ] <span>+</span></div>
-                    <div class="fav-content">
-                        <ul>
-                            <li>Breakcore</li> <li>Vocaloid</li>
-                            <li>Sewerslvt</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <script>
-        // Логика аккордеона (плавное открытие/закрытие)
         function toggleFav(header) {
             const currentItem = header.parentElement;
             const allItems = document.querySelectorAll('.fav-item');
@@ -334,7 +331,6 @@
             }
         }
 
-        // Логика терминала
         const cmdInput = document.getElementById('cmd');
         const history = document.getElementById('history');
         const inputContainer = document.getElementById('input-container');
