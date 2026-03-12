@@ -79,7 +79,6 @@
             100% { height: 480px; opacity: 1; padding: 25px; border-top: 1px solid #222; border-bottom: 1px solid #222; border-left: 1px solid #222; border-right: 1px solid #222; }
         }
 
-        /* Анимация закрытия терминала */
         .terminal-exit {
             animation: exitTerminal 0.5s cubic-bezier(0.7, 0, 0.84, 0) forwards !important;
         }
@@ -142,7 +141,7 @@
             background: #000;
             color: #fff;
             overflow: hidden;
-            display: none;
+            display: none; 
             z-index: 20;
             transform: translateY(-50%);
         }
@@ -201,7 +200,7 @@
             <h1 style="border-bottom: 1px solid #1793d1; padding-bottom: 15px; display: inline-block;">System Shell</h1>
             <p style="margin-top: 20px; font-size: 18px;">Доступ успешно активирован.</p>
             <p style="color: #888;">Вы находитесь в основной директории проекта.</p>
-            <button onclick="location.reload()" style="margin-top: 40px; background: transparent; color: #1793d1; border: 1px solid #1793d1; padding: 10px 25px; cursor: pointer; transition: 0.3s;">Выйти</button>
+            <button onclick="location.reload()" style="margin-top: 40px; background: transparent; color: #1793d1; border: 1px solid #1793d1; padding: 10px 25px; cursor: pointer;">Выйти</button>
         </div>
     </div>
 
@@ -215,7 +214,7 @@
         const initContainer = document.getElementById('init-container');
 
         setTimeout(() => {
-            inputContainer.classList.add('flex-visible');
+            inputContainer.style.display = 'flex';
             cmdInput.focus();
         }, 3000);
 
@@ -226,23 +225,19 @@
                 logLine.innerHTML = `<span class="prompt">[user@arch ~]$</span> ${val}`;
                 history.appendChild(logLine);
 
-                // Строгая проверка регистра
                 if (val === 'sudo activate Iris') {
                     const status = document.createElement('div');
                     status.style.color = '#55ff55';
                     status.innerText = 'Access granted. Initializing...';
                     history.appendChild(status);
                     
+                    cmdInput.disabled = true;
+
                     setTimeout(() => {
-                        // 1. Схлопываем терминал обратно в линию
                         terminal.classList.add('terminal-exit');
-                        
                         setTimeout(() => {
-                            // 2. Растягиваем линию на весь экран
                             line.classList.add('line-fullscreen');
-                            
                             setTimeout(() => {
-                                // 3. Раскрываем основную страницу по вертикали
                                 mainPage.classList.add('page-open');
                                 initContainer.style.display = 'none';
                             }, 500);
@@ -253,8 +248,8 @@
                 } else if (val !== '') {
                     const error = document.createElement('div');
                     error.style.color = '#ff5555';
-                    error.innerText = val.toLowerCase() === 'sudo activate iris' 
-                        ? 'Error: Case sensitive. Check the capital letters.' 
+                    error.innerText = (val === 'sudo activate iris') 
+                        ? 'Error: Case sensitive. Use "Iris".' 
                         : `sh: command not found: ${val}`;
                     history.appendChild(error);
                 }
