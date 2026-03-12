@@ -52,6 +52,7 @@
             opacity: 0;
             box-shadow: 0 0 15px #1793d1;
             animation: fluidLine 0.6s cubic-bezier(0.22, 1, 0.36, 1) 1.8s forwards;
+            z-index: 30;
         }
 
         @keyframes fluidLine {
@@ -80,7 +81,7 @@
         }
 
         .terminal-exit {
-            animation: exitToLine 0.5s cubic-bezier(0.7, 0, 0.84, 0) forwards !important;
+            animation: exitToLine 0.6s cubic-bezier(0.65, 0, 0.35, 1) forwards !important;
         }
 
         @keyframes exitToLine {
@@ -89,12 +90,12 @@
         }
 
         .line-to-fullscreen {
-            animation: lineFullWidth 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
+            animation: lineFullWidth 0.7s cubic-bezier(0.65, 0, 0.35, 1) forwards !important;
         }
 
         @keyframes lineFullWidth {
-            0% { width: 800px; }
-            100% { width: 100vw; }
+            0% { width: 800px; opacity: 1; }
+            100% { width: 100vw; opacity: 1; }
         }
 
         #history {
@@ -150,7 +151,7 @@
             height: 50%;
             background: #000;
             z-index: 25;
-            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1);
         }
 
         #curtain-top { top: 0; border-bottom: 1px solid #1793d1; }
@@ -186,7 +187,7 @@
             /  /       \  \
            /__/         \__\
                 </div>
-                <div>Arch Linux 6.12.1-arch1-1 (tty1)</div>
+                <div>Arch Linux 6.12.1-arch1-1 (tty1) tty1</div>
                 <div style="opacity: 0.7;">System state: <span style="color: #ffaa00;">LOCKED</span></div>
                 <div style="margin-top: 10px;">Type <span style="color: #fff;">"sudo activate Iris"</span> to proceed.</div>
                 <br>
@@ -205,8 +206,8 @@
         <div style="padding: 60px; color: #fff;">
             <h1 style="border-bottom: 1px solid #1793d1; padding-bottom: 15px; display: inline-block;">System Shell</h1>
             <p style="margin-top: 20px; font-size: 18px;">Доступ успешно активирован.</p>
-            <p style="color: #888;">Вы находитесь в основной директории проекта.</p>
-            <button onclick="location.reload()" style="margin-top: 40px; background: transparent; color: #1793d1; border: 1px solid #1793d1; padding: 10px 25px; cursor: pointer;">Выйти</button>
+            <p style="color: #888;">Вы вошли в защищенную среду Iris.</p>
+            <button onclick="location.reload()" style="margin-top: 40px; background: transparent; color: #1793d1; border: 1px solid #1793d1; padding: 10px 25px; cursor: pointer; transition: 0.3s;">Выйти</button>
         </div>
     </div>
 
@@ -240,25 +241,21 @@
                     cmdInput.disabled = true;
 
                     setTimeout(() => {
-                        // 1. Сплющиваем терминал до линии
                         terminal.classList.add('terminal-exit');
                         
                         setTimeout(() => {
-                            // 2. Растягиваем линию до краев экрана
-                            line.style.zIndex = "30";
                             line.classList.add('line-to-fullscreen');
                             
                             setTimeout(() => {
-                                // 3. Открываем основную страницу раздвиганием шторок
                                 mainPage.style.display = 'block';
                                 setTimeout(() => {
                                     mainPage.classList.add('reveal-active');
                                     initContainer.style.display = 'none';
                                     line.style.display = 'none';
                                 }, 50);
-                            }, 600);
-                        }, 500);
-                    }, 600);
+                            }, 550); 
+                        }, 450); 
+                    }, 400);
                 } else if (val.toLowerCase() === 'clear') {
                     history.innerHTML = '';
                 } else if (val !== '') {
