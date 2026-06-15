@@ -112,14 +112,33 @@
             border-radius: 12px;
             border: 1px solid #2c2c2c;
             text-align: left;
+            max-height: 65vh;
+            overflow-y: auto;
+        }
+
+        .about-text h3 {
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .about-text p {
+            margin-bottom: 20px;
+            color: #b0b0b0;
+        }
+
+        .about-text p:last-child {
+            margin-bottom: 0;
         }
 
         .links {
             margin-top: 25px;
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
             gap: 15px;
+            max-width: 550px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .links a {
@@ -127,17 +146,25 @@
             text-decoration: none;
             font-weight: 500;
             font-size: 1.1rem;
-            padding: 10px 20px;
+            padding: 12px 20px;
             border: 1px solid #2c2c2c;
             border-radius: 8px;
             background-color: var(--card-bg);
             transition: all 0.3s;
+            display: block;
+            text-align: center;
         }
 
         .links a:hover {
             color: var(--accent-color);
             border-color: var(--accent-color);
             transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .links {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -165,7 +192,17 @@
                 <div class="content-box">
                     <h2>Обо мне</h2>
                     <div class="about-text">
-                        <p>Здесь можно детально описать свои ключевые навыки, интересы и текущую деятельность. Этот блок отлично подойдет для рассказа о твоих целях в веб-разработке и увлечениях.</p>
+                        <h3>1. Базовая информация</h3>
+                        <p>Имя: Ирис<br>Местоимения: Он/Его<br>Возраст: 16</p>
+                        
+                        <h3>2. Фандомы</h3>
+                        <p>Re:Zero, Roblox, Undertale, Deltarune, OMORI, ULTRAKILL, FNAF, AvA/AvM, Pokemon, Murder Drones, Helluva Boss, TADC</p>
+                        
+                        <h3>3. Игры</h3>
+                        <p>Roblox, Undertale, OMORI, ULTRAKILL, FNAF, Osu, Friday Night Funkin', Your Only Move Is HUSTLE, Dead By Daylight, Minecraft</p>
+                        
+                        <h3>Вкратце обо мне:</h3>
+                        <p>Интересный парень, если конечно найти общий язык. Увлекается рисованием и программированием. Не против поиграть во что-то вместе, будь то шутер или головоломка. Среди покемонов обожает eeveelutions. Его любимый покемон на сегодняшний день - Умбреон. К фурри и фембоям относится нейтрально-положительно. Также любит слушать музыку, чаще всего вокалоиды.</p>
                     </div>
                 </div>
             </section>
