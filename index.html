@@ -51,7 +51,7 @@
         }
 
         header {
-            height: 70px;
+            height: 105px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -63,6 +63,20 @@
             width: 100%;
             z-index: 100;
             border-bottom: 1px solid var(--glass-border);
+        }
+
+        .nav-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-logo {
+            width: 32px;
+            height: 32px;
+            object-fit: cover;
+            border-radius: 6px;
         }
 
         nav a {
@@ -84,13 +98,13 @@
             height: 100vh;
             overflow: hidden;
             position: relative;
-            padding-top: 70px;
+            padding-top: 105px;
         }
 
         .slider-wrapper {
             display: flex;
             width: 300vw;
-            height: calc(100vh - 70px);
+            height: calc(100vh - 105px);
             transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
@@ -229,11 +243,14 @@
     <div class="glow-2"></div>
 
     <header>
-        <nav>
-            <a class="active" onclick="switchPage(0)">Главная</a>
-            <a onclick="switchPage(1)">Обо мне</a>
-            <a onclick="switchPage(2)">Контакты</a>
-        </nav>
+        <div class="nav-container">
+            <img src="umbreon.png" alt="Umbreon" class="nav-logo">
+            <nav>
+                <a class="active" onclick="switchPage(0)">Главная</a>
+                <a onclick="switchPage(1)">Обо мне</a>
+                <a onclick="switchPage(2)">Контакты</a>
+            </nav>
+        </div>
     </header>
 
     <div class="slider-container">
@@ -244,7 +261,7 @@
                     <h1>Доброго времени суток</h1>
                     <p>Данный сайт является визиткой Ириса (@iis_forgetme)</p>
                 </div>
-                <img src="_mleh.gif" alt="Umbreon" class="hero-gif">
+                <img src="mleh.gif" alt="Iris GIF" class="hero-gif">
             </section>
 
             <section class="page" id="about">
