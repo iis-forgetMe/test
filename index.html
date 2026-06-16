@@ -301,6 +301,7 @@
             object-fit: cover;
             border-radius: 12px;
             border: 1px solid var(--glass-border);
+            cursor: zoom-in;
             transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
         }
 
@@ -308,6 +309,45 @@
             transform: scale(1.04);
             border-color: var(--accent-color);
             box-shadow: 0 5px 15px rgba(255, 215, 0, 0.1);
+        }
+
+        .lightbox-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(5, 5, 7, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 300;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            cursor: zoom-out;
+        }
+
+        .lightbox-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .lightbox-overlay img {
+            max-width: 85vw;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+            transform: scale(0.95);
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .lightbox-overlay.active img {
+            transform: scale(1);
         }
 
         @media (max-width: 600px) {
@@ -402,14 +442,18 @@
 
     <div id="gallery" class="gallery-overlay" onclick="toggleGallery(false)">
         <div class="gallery-window" onclick="event.stopPropagation()">
-            <button class="close-gallery" onclick="toggleGallery(false)">&times;</button>
-            <h2>Галерея</h2>
+            <button class="close-gallery" onclick="toggleGallery(false)">×</button>
+            <h2>Умбреончик</h2>
             <div class="gallery-grid">
-                <img src="umbrefem.jpg" alt="Umbreon Female">
-                <img src="typhumbre.jpg" alt="Typh Umbreon">
-                <img src="girlumbre.jpg" alt="Umbreon">
+                <img src="girlumbre.jpg" alt="Umbreon" onclick="openLightbox(this.src)">
+                <img src="umbrefem.jpg" alt="Umbreon Female" onclick="openLightbox(this.src)">
+                <img src="typhumbre.jpg" alt="Typh Umbreon" onclick="openLightbox(this.src)">
             </div>
         </div>
+    </div>
+
+    <div id="lightbox" class="lightbox-overlay" onclick="toggleLightbox(false)">
+        <img id="lightbox-img" src="" alt="Zoomed">
     </div>
 
     <script>
@@ -429,6 +473,20 @@
                 gallery.classList.add('active');
             } else {
                 gallery.classList.remove('active');
+            }
+        }
+
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightbox-img');
+            lightboxImg.src = src;
+            lightbox.classList.add('active');
+        }
+
+        function toggleLightbox(show) {
+            const lightbox = document.getElementById('lightbox');
+            if (!show) {
+                lightbox.classList.remove('active');
             }
         }
     </script>
