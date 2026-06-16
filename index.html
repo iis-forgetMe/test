@@ -73,6 +73,13 @@
             height: 35px;
             object-fit: cover;
             border-radius: 6px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .nav-logo:hover {
+            transform: scale(1.08);
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
         }
 
         nav a {
@@ -220,6 +227,89 @@
             box-shadow: 0 6px 20px rgba(255, 215, 0, 0.15);
         }
 
+        .gallery-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(10, 10, 12, 0.8);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            z-index: 200;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .gallery-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .gallery-window {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            padding: 35px;
+            border-radius: 24px;
+            max-width: 650px;
+            width: 90%;
+            max-height: 75vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 24px 50px rgba(0, 0, 0, 0.6);
+            transform: scale(0.9);
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .gallery-overlay.active .gallery-window {
+            transform: scale(1);
+        }
+
+        .close-gallery {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 2.2rem;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.3s;
+        }
+
+        .close-gallery:hover {
+            color: var(--accent-color);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .gallery-grid img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .gallery-grid img:hover {
+            transform: scale(1.04);
+            border-color: var(--accent-color);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.1);
+        }
+
         @media (max-width: 600px) {
             .links {
                 grid-template-columns: 1fr;
@@ -235,6 +325,16 @@
                 width: 30px;
                 height: 30px;
             }
+            .gallery-window {
+                padding: 25px 20px;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+                gap: 10px;
+            }
+            .gallery-grid img {
+                height: 110px;
+            }
         }
     </style>
 </head>
@@ -244,7 +344,7 @@
     <div class="glow-2"></div>
 
     <header>
-        <img src="umbreon.png" alt="Umbreon" class="nav-logo">
+        <img src="umbreon.png" alt="Umbreon" class="nav-logo" onclick="toggleGallery(true)">
         <nav>
             <a class="active" onclick="switchPage(0)">Главная</a>
             <a onclick="switchPage(1)">Обо мне</a>
@@ -300,6 +400,18 @@
         </div>
     </div>
 
+    <div id="gallery" class="gallery-overlay" onclick="toggleGallery(false)">
+        <div class="gallery-window" onclick="event.stopPropagation()">
+            <button class="close-gallery" onclick="toggleGallery(false)">&times;</button>
+            <h2>Галерея</h2>
+            <div class="gallery-grid">
+                <img src="umbrefem.jpg" alt="Umbreon Female">
+                <img src="typhumbre.jpg" alt="Typh Umbreon">
+                <img src="girlumbre.jpg" alt="Umbreon">
+            </div>
+        </div>
+    </div>
+
     <script>
         function switchPage(index) {
             const wrapper = document.getElementById('wrapper');
@@ -309,6 +421,15 @@
             
             links.forEach(link => link.classList.remove('active'));
             links[index].classList.add('active');
+        }
+
+        function toggleGallery(show) {
+            const gallery = document.getElementById('gallery');
+            if (show) {
+                gallery.classList.add('active');
+            } else {
+                gallery.classList.remove('active');
+            }
         }
     </script>
 
