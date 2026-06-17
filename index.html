@@ -126,23 +126,121 @@
         .content-box {
             max-width: 700px;
             width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .discord-card {
+            width: 330px;
+            background: rgba(18, 18, 22, 0.5);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            overflow: hidden;
+            text-align: left;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .discord-banner {
+            height: 100px;
+            background: linear-gradient(135deg, #1b1b22 0%, #2e2e3a 100%);
+            position: relative;
+        }
+
+        .discord-avatar-space {
+            position: absolute;
+            top: 55px;
+            left: 16px;
+            width: 82px;
+            height: 82px;
+            background: #121216;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .discord-icon-placeholder {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #2b2d31;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .discord-icon-placeholder::before {
+            content: '';
+            width: 32px;
+            height: 24px;
+            background: #fff;
+            clip-path: polygon(10% 0%, 90% 0%, 100% 25%, 85% 85%, 65% 100%, 35% 100%, 15% 85%, 0% 25%);
+            opacity: 0.85;
+        }
+
+        .discord-status-dot {
+            position: absolute;
+            bottom: 1px;
+            right: 1px;
+            width: 16px;
+            height: 16px;
+            background: #23a55a;
+            border: 3px solid #121216;
+            border-radius: 50%;
+        }
+
+        .discord-main {
+            padding: 50px 16px 16px 16px;
+        }
+
+        .discord-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .discord-tag {
+            font-size: 0.9rem;
+            color: #b5bac1;
+            margin-bottom: 12px;
+        }
+
+        .discord-custom-status {
+            font-size: 0.85rem;
+            color: #dbdee1;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            margin-bottom: 12px;
+        }
+
+        .discord-line {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.06);
+            margin-bottom: 12px;
+        }
+
+        .discord-header-small {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #949ba4;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .discord-bio {
+            font-size: 0.85rem;
+            color: #dbdee1;
         }
 
         #hero {
             position: relative;
-        }
-
-        #hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 15px;
-            color: #fff;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
-        }
-
-        #hero p {
-            font-size: 1.3rem;
-            color: #a0a0a0;
-            word-break: break-word;
         }
 
         .hero-gif {
@@ -397,8 +495,23 @@
             
             <section class="page" id="hero">
                 <div class="content-box">
-                    <h1>Доброго времени суток</h1>
-                    <p>Данный сайт является визиткой Ириса (@iis_forgetme)</p>
+                    <div class="discord-card">
+                        <div class="discord-banner">
+                            <div class="discord-avatar-space">
+                                <div class="discord-icon-placeholder">
+                                    <div class="discord-status-dot"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="discord-main">
+                            <div class="discord-name">Ирис</div>
+                            <div class="discord-tag">@iis_forgetme</div>
+                            <div class="discord-custom-status">☁️ Занят программированием...</div>
+                            <div class="discord-line"></div>
+                            <div class="discord-header-small">Обо мне</div>
+                            <div class="discord-bio">Добро пожаловать. Данный сайт является моей персональной страницей-визиткой.</div>
+                        </div>
+                    </div>
                 </div>
                 <img src="mleh.gif" alt="Iris GIF" class="hero-gif">
             </section>
