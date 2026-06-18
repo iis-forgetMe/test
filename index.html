@@ -402,6 +402,7 @@
             cursor: pointer;
             line-height: 1;
             transition: color 0.3s;
+            z-index: 10;
         }
 
         .close-gallery:hover {
@@ -431,6 +432,21 @@
             box-shadow: 0 5px 15px rgba(255, 215, 0, 0.1);
         }
 
+        .gallery-video {
+            grid-column: 1 / -1;
+            width: 100%;
+            height: auto;
+            border: 1px solid var(--accent-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .gallery-video:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.2);
+        }
+
         .lightbox-overlay {
             position: fixed;
             top: 0;
@@ -455,7 +471,7 @@
             visibility: visible;
         }
 
-        .lightbox-overlay img {
+        .lightbox-overlay img, .lightbox-overlay video {
             max-width: 85vw;
             max-height: 85vh;
             object-fit: contain;
@@ -466,7 +482,7 @@
             transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
-        .lightbox-overlay.active img {
+        .lightbox-overlay.active img, .lightbox-overlay.active video {
             transform: scale(1);
         }
 
@@ -578,17 +594,18 @@
     <div id="gallery" class="gallery-overlay" onclick="toggleGallery(false)">
         <div class="gallery-window" onclick="event.stopPropagation()">
             <button class="close-gallery" onclick="toggleGallery(false)">×</button>
-            <h2>Умбреончик</h2>
             <div class="gallery-grid">
-                <img src="girlumbre.jpg" alt="Umbreon" onclick="openLightbox(this.src)">
-                <img src="umbrefem.jpg" alt="Umbreon Female" onclick="openLightbox(this.src)">
-                <img src="typhumbre.jpg" alt="Typh Umbreon" onclick="openLightbox(this.src)">
+                <img src="girlumbre.jpg" alt="Umbreon" onclick="openLightbox(this.src, false)">
+                <img src="umbrefem.jpg" alt="Umbreon Female" onclick="openLightbox(this.src, false)">
+                <img src="typhumbre.jpg" alt="Typh Umbreon" onclick="openLightbox(this.src, false)">
+                <video src="boggle.mp4" class="gallery-video" muted loop autoplay playsinline onclick="openLightbox(this.src, true)"></video>
             </div>
         </div>
     </div>
 
     <div id="lightbox" class="lightbox-overlay" onclick="toggleLightbox(false)">
         <img id="lightbox-img" src="" alt="Zoomed">
+        <video id="lightbox-video" src="" controls onclick="event.stopPropagation()"></video>
     </div>
 
     <script>
@@ -611,17 +628,33 @@
             }
         }
 
-        function openLightbox(src) {
+        function openLightbox(src, isVideo = false) {
             const lightbox = document.getElementById('lightbox');
-            const lightboxImg = document.getElementById('lightbox-img');
-            lightboxImg.src = src;
+            const img = document.getElementById('lightbox-img');
+            const video = document.getElementById('lightbox-video');
+            
+            if (isVideo) {
+                img.style.display = 'none';
+                video.src = src;
+                video.style.display = 'block';
+                video.play();
+            } else {
+                video.style.display = 'none';
+                video.pause();
+                video.src = '';
+                img.src = src;
+                img.style.display = 'block';
+            }
             lightbox.classList.add('active');
         }
 
         function toggleLightbox(show) {
             const lightbox = document.getElementById('lightbox');
+            const video = document.getElementById('lightbox-video');
             if (!show) {
                 lightbox.classList.remove('active');
+                video.pause();
+                video.src = '';
             }
         }
     </script>
