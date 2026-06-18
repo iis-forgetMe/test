@@ -32,11 +32,12 @@
             position: fixed;
             top: -150px;
             right: -150px;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(255, 215, 0, 0.08) 0%, rgba(0,0,0,0) 70%);
+            width: 650px;
+            height: 650px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.15) 0%, rgba(0,0,0,0) 70%);
             z-index: -1;
             pointer-events: none;
+            filter: blur(90px);
         }
 
         .glow-2 {
@@ -45,9 +46,34 @@
             left: -100px;
             width: 700px;
             height: 700px;
-            background: radial-gradient(circle, rgba(74, 144, 226, 0.05) 0%, rgba(0,0,0,0) 70%);
+            background: radial-gradient(circle, rgba(74, 144, 226, 0.06) 0%, rgba(0,0,0,0) 70%);
             z-index: -1;
             pointer-events: none;
+            filter: blur(90px);
+        }
+
+        .glow-3 {
+            position: fixed;
+            top: 35%;
+            left: -150px;
+            width: 550px;
+            height: 550px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.12) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+            pointer-events: none;
+            filter: blur(90px);
+        }
+
+        .glow-4 {
+            position: fixed;
+            bottom: -100px;
+            right: 15%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, rgba(0,0,0,0) 70%);
+            z-index: -1;
+            pointer-events: none;
+            filter: blur(90px);
         }
 
         header {
@@ -428,6 +454,8 @@
 
     <div class="glow-1"></div>
     <div class="glow-2"></div>
+    <div class="glow-3"></div>
+    <div class="glow-4"></div>
 
     <header>
         <img src="umbreon.png" alt="Umbreon" class="nav-logo" onclick="toggleGallery(true)">
