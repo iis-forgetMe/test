@@ -184,7 +184,7 @@
 
         .slider-wrapper {
             display: flex;
-            width: 300vw;
+            width: 400vw;
             height: calc(100vh - 70px);
             transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
@@ -283,9 +283,7 @@
             text-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
         }
 
-        .about-text {
-            font-size: 1.15rem;
-            color: var(--text-color);
+        .glass-box {
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -314,6 +312,32 @@
 
         .about-text p:last-child {
             margin-bottom: 0;
+        }
+
+        .lovelist-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            font-size: 1.1rem;
+        }
+
+        .lovelist-table tr {
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .lovelist-table tr:last-child {
+            border-bottom: none;
+        }
+
+        .lovelist-table td {
+            padding: 15px;
+            color: #b0b0b0;
+        }
+
+        .lovelist-table td:first-child {
+            color: var(--accent-color);
+            font-weight: 500;
+            width: 50px;
         }
 
         .links {
@@ -535,7 +559,8 @@
         <nav>
             <a class="active" onclick="switchPage(0)">Главная</a>
             <a onclick="switchPage(1)">Обо мне</a>
-            <a onclick="switchPage(2)">Контакты</a>
+            <a onclick="switchPage(2)">Лавлист</a>
+            <a onclick="switchPage(3)">Контакты</a>
         </nav>
     </header>
 
@@ -562,7 +587,7 @@
             <section class="page" id="about">
                 <div class="content-box">
                     <h2>Обо мне</h2>
-                    <div class="about-text">
+                    <div class="glass-box about-text">
                         <h3>1. Базовая информация</h3>
                         <p>Имя: Ирис<br>Местоимения: Он/Его<br>Возраст: 16</p>
                         
@@ -574,6 +599,20 @@
                         
                         <h3>Вкратце обо мне:</h3>
                         <p>Интересный парень, если конечно найти общий язык. Увлекается рисованием и программированием. Не против поиграть во что-то вместе, будь то шутер или головоломка. Среди покемонов обожает eeveelutions. Его любимый покемон на сегодняшний день - Умбреон. К фурри и фембоям относится нейтрально-положительно. Также любит слушать музыку, чаще всего вокалоиды.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="page" id="lovelist">
+                <div class="content-box">
+                    <h2>Лавлист</h2>
+                    <div class="glass-box">
+                        <p style="text-align: center; color: #fff; margin-bottom: 15px; font-weight: 500; font-size: 1.1rem;">Мои самые близкие люди</p>
+                        <table class="lovelist-table">
+                            <tr><td>1</td><td>Meossy <3</td></tr>
+                            <tr><td>2</td><td>Mr Kinako</td></tr>
+                            <tr><td>3</td><td>Kamori</td></tr>
+                        </table>
                     </div>
                 </div>
             </section>
