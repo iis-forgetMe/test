@@ -652,6 +652,8 @@
     </div>
 
     <script>
+        const umbreonCry = new Audio('umbreoncry.mp3');
+
         function switchPage(index) {
             const wrapper = document.getElementById('wrapper');
             const links = document.querySelectorAll('nav a');
@@ -666,6 +668,8 @@
             const gallery = document.getElementById('gallery');
             if (show) {
                 gallery.classList.add('active');
+                umbreonCry.currentTime = 0;
+                umbreonCry.play().catch(e => {});
             } else {
                 gallery.classList.remove('active');
             }
